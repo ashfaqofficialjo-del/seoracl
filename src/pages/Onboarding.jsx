@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { GraduationCap, BookOpen, FileText, ChevronRight, Sparkles } from 'lucide-react'
 import logo from '../assets/logo2.png'
+import { supabase } from '../lib/supabaseClient'
+import { useAuth } from '../hooks/useAuth'
 
 const steps = [
   {
@@ -40,8 +42,9 @@ const steps = [
   }
 ]
 
-export default function Onboarding() {
+ export default function Onboarding() {
   const navigate = useNavigate()
+  const { user } = useAuth()
   const [currentStep, setCurrentStep] = useState(0)
   const [selected, setSelected] = useState(null)
   const [answers, setAnswers] = useState([])
@@ -52,15 +55,23 @@ export default function Onboarding() {
     setSelected(option.label)
   }
 
-  const handleNext = () => {
+  const handleNext = async () => {
     if (!selected) return
     const newAnswers = [...answers, selected]
     setAnswers(newAnswers)
     setSelected(null)
 
-    if (currentStep < steps.length - 1) {
+     if (currentStep < steps.length - 1) {
       setCurrentStep(currentStep + 1)
     } else {
+      if (user) {
+        await supabase.from('user_stats').upsert({
+          user_id: user.id,
+          citations_fixed: 0,
+          reports_generated: 0,
+          pdfs_remaining: 3,
+        })
+      }
       navigate('/home')
     }
   }

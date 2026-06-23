@@ -1,5 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { Toaster } from 'react-hot-toast'
 import { useAuth } from './hooks/useAuth'
+import Landing from './pages/Landing'
 import SplashScreen from './pages/SplashScreen'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
@@ -13,6 +15,9 @@ import History from './pages/History'
 import AIReport from './pages/AIReport'
 import NotFound from './pages/NotFound'
 import Settings from './pages/Settings'
+import StyleGuide from './pages/StyleGuide'
+import AdminDashboard from './pages/AdminDashboard'
+import BottomNav from './components/ui/BottomNav'
 
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth()
@@ -37,8 +42,14 @@ function PublicRoute({ children }) {
 function App() {
   return (
     <BrowserRouter>
+      <Toaster position="top-right" toastOptions={{
+        style: { borderRadius: '16px', background: '#fff', color: '#334155', fontSize: '14px', border: '1px solid #e2e8f0' },
+        success: { iconTheme: { primary: '#6366f1', secondary: '#fff' } }
+      }} />
+        <BottomNav />
       <Routes>
-        <Route path="/" element={<SplashScreen />} />
+        <Route path="/" element={<Landing />} />
+        <Route path="/splash" element={<SplashScreen />} />
         <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
         <Route path="/signup" element={<PublicRoute><Signup /></PublicRoute>} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
@@ -50,6 +61,8 @@ function App() {
         <Route path="/history" element={<ProtectedRoute><History /></ProtectedRoute>} />
         <Route path="/ai-report" element={<ProtectedRoute><AIReport /></ProtectedRoute>} />
         <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
+        <Route path="/style-guide" element={<ProtectedRoute><StyleGuide /></ProtectedRoute>} />
+        <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>

@@ -3,12 +3,13 @@ import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import {
   ArrowLeft, FileText, Copy, Download,
-  CheckCircle, AlertCircle, Loader, BookOpen
+  CheckCircle, AlertCircle, Loader, BookOpen, Share
 } from 'lucide-react'
 import { jsPDF } from 'jspdf'
 import { useAuth } from '../hooks/useAuth'
 import { supabase } from '../lib/supabaseClient'
 import logo from '../assets/logo2.png'
+import ShareModal from '../components/ui/ShareModal'
 
 const CITATION_STYLES = ['APA', 'MLA', 'Chicago']
 
@@ -59,6 +60,7 @@ export default function CitationTool() {
   const [loading, setLoading] = useState(false)
   const [done, setDone] = useState(false)
   const [copied, setCopied] = useState(false)
+  const [showShare, setShowShare] = useState(false)
   const [copiedIndex, setCopiedIndex] = useState(null)
   const [error, setError] = useState('')
 
@@ -103,7 +105,7 @@ export default function CitationTool() {
           .select('*')
           .eq('user_id', user.id)
           .single()
-       if (data) {
+        if (data) {
           await supabase
             .from('user_stats')
             .update({ citations_fixed: data.citations_fixed + formatted.length })
@@ -326,6 +328,13 @@ export default function CitationTool() {
                   <Download size={14} strokeWidth={1.5} />
                   {pdfsRemaining > 0 ? 'Download PDF' : 'Upgrade for PDF'}
                 </button>
+                <button
+                  onClick={() => setShowShare(true)}
+                  className="flex items-center gap-1.5 text-sm bg-slate-700 hover:bg-slate-800 text-white px-3 py-1.5 rounded-xl transition-all"
+                >
+                  <Share size={14} strokeWidth={1.5} />
+                  Share
+                </button>
               </div>
             </div>
 
@@ -356,6 +365,12 @@ export default function CitationTool() {
           </motion.div>
         )}
       </div>
+      <ShareModal
+        isOpen={showShare}
+        onClose={() => setShowShare(false)}
+        references={references.join('\n\n')}
+        style={style}
+      />
     </div>
   )
 }
