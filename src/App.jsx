@@ -39,6 +39,17 @@ function PublicRoute({ children }) {
   return !user ? children : <Navigate to="/home" />
 }
 
+    function HomeRouter() {
+  const { isNewUser } = useAuth()
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (isNewUser) navigate('/onboarding')
+  }, [isNewUser])
+
+  return <Home />
+}
+
 function App() {
   return (
     <BrowserRouter>
@@ -54,7 +65,7 @@ function App() {
         <Route path="/signup" element={<PublicRoute><Signup /></PublicRoute>} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/onboarding" element={<ProtectedRoute><Onboarding /></ProtectedRoute>} />
-        <Route path="/home" element={<ProtectedRoute><Home /></ProtectedRoute>} />
+        <Route path="/home" element={<ProtectedRoute><HomeRouter /></ProtectedRoute>} />
         <Route path="/tool" element={<ProtectedRoute><CitationTool /></ProtectedRoute>} />
         <Route path="/pricing" element={<ProtectedRoute><Pricing /></ProtectedRoute>} />
         <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
