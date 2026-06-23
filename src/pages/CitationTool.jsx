@@ -103,12 +103,20 @@ export default function CitationTool() {
           .select('*')
           .eq('user_id', user.id)
           .single()
-        if (data) {
+       if (data) {
           await supabase
             .from('user_stats')
             .update({ citations_fixed: data.citations_fixed + formatted.length })
             .eq('user_id', user.id)
         }
+
+        // Save to history
+        await supabase.from('citation_history').insert({
+          user_id: user.id,
+          style: style,
+          count: formatted.length,
+          ref_text: formatted.join('\n\n')
+        })
       }
     }, 1800)
   }

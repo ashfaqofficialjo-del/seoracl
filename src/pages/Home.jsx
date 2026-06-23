@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import {
   FileText, BookOpen, Sparkles, LogOut,
-  ChevronRight, Clock, Star, Zap
+  ChevronRight, Clock, Star, Zap,
+  User, Settings, History, CreditCard
 } from 'lucide-react'
 import { supabase } from '../lib/supabaseClient'
 import { useAuth } from '../hooks/useAuth'
@@ -66,7 +67,7 @@ export default function Home() {
       description: 'Check your essay for AI-generated content and get a detailed score report.',
       badge: 'New',
       badgeColor: 'bg-emerald-100 text-emerald-600',
-      action: () => navigate('/tool'),
+      action: () => navigate('/ai-report'),
     },
     {
       id: 3,
@@ -93,20 +94,30 @@ export default function Home() {
         <div className="absolute bottom-0 right-0 w-96 h-96 bg-indigo-100 rounded-full opacity-30 blur-3xl" />
       </div>
 
-      {/* Navbar */}
+        {/* Navbar */}
       <nav className="relative z-10 flex items-center justify-between px-6 py-4 bg-white/70 backdrop-blur-md border-b border-slate-100">
         <div className="flex items-center gap-2">
           <img src={logo} alt="Seoracl" className="w-8 h-8 object-contain" />
           <span className="font-bold text-slate-800 text-lg">seoracl</span>
         </div>
-        <div className="flex items-center gap-4">
-          <span className="text-slate-400 text-sm hidden sm:block">{user?.email}</span>
+        <div className="flex items-center gap-3">
+          <button onClick={() => navigate('/history')} className="text-slate-400 hover:text-indigo-500 transition-colors" title="History">
+            <Clock size={18} strokeWidth={1.5} />
+          </button>
+          <button onClick={() => navigate('/pricing')} className="text-slate-400 hover:text-indigo-500 transition-colors" title="Pricing">
+            <CreditCard size={18} strokeWidth={1.5} />
+          </button>
+          <button onClick={() => navigate('/settings')} className="text-slate-400 hover:text-indigo-500 transition-colors" title="Settings">
+            <Settings size={18} strokeWidth={1.5} />
+          </button>
+          <button onClick={() => navigate('/profile')} className="text-slate-400 hover:text-indigo-500 transition-colors" title="Profile">
+            <User size={18} strokeWidth={1.5} />
+          </button>
           <button
             onClick={handleLogout}
-            className="flex items-center gap-2 text-slate-500 hover:text-red-400 transition-colors text-sm"
+            className="flex items-center gap-2 text-slate-500 hover:text-red-400 transition-colors text-sm ml-2"
           >
             <LogOut size={16} strokeWidth={1.5} />
-            <span className="hidden sm:block">Sign out</span>
           </button>
         </div>
       </nav>
